@@ -10,7 +10,7 @@ target_drive = "REARM"
 import os
 import platform
 current_OS = platform.system()
-Import("env")
+
 
 def detect_error(e):
     print '\nUnable to find destination disk (' + e + ')\n' \
@@ -53,18 +53,4 @@ if current_OS == 'Windows':
                 if target_drive in volume_info and target_file_found == False:  # set upload if not found target file yet
                     target_drive_found = True
                     upload_disk = final_drive_name
-
-
-        #
-        # set upload_port to drive if found
-        #
-
-        if target_file_found == True or target_drive_found == True:
-            env.Replace(
-                UPLOAD_PORT=upload_disk
-            )
-            print 'upload disk: ', upload_disk
-            break
-        else:
-            detect_error('Autodetect Error')
-
+                    print upload_disk

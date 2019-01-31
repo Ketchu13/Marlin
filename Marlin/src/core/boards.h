@@ -47,6 +47,7 @@
 #define BOARD_RAMPS_PLUS_EEF   146    // RAMPS Plus 3DYMY (Power outputs: Hotend0, Hotend1, Fan)
 #define BOARD_RAMPS_PLUS_SF    148    // RAMPS Plus 3DYMY (Power outputs: Spindle, Controller Fan)
 
+#define BOARD_RAMPS_S3DP      442    // RAMPS 1.4 (Power outputs: Hotend0, Hotend1, Bed)
 //
 // RAMPS Derivatives - ATmega1280, ATmega2560
 //
@@ -117,7 +118,6 @@
 #define BOARD_GT2560_REV_A_PLUS 75    // Geeetech GT2560 Rev. A+ (with auto level probe)
 #define BOARD_GT2560_V3         76    // Geeetech GT2560 Rev B for A10(M/D)
 #define BOARD_GT2560_V3_MC2     73    // Geeetech GT2560 Rev B for Mecreator2
-#define BOARD_GT2560_V3_A20     86    // Geeetech GT2560 Rev B for A20(M/D)
 #define BOARD_EINSTART_S        666   // Einstart retrofit
 
 //
@@ -180,6 +180,8 @@
 #define BOARD_RAMPS_14_RE_ARM_EFF 1745  // Re-ARM with RAMPS 1.4 (Power outputs: Hotend, Fan0, Fan1)
 #define BOARD_RAMPS_14_RE_ARM_EEF 1746  // Re-ARM with RAMPS 1.4 (Power outputs: Hotend0, Hotend1, Fan)
 #define BOARD_RAMPS_14_RE_ARM_SF  1748  // Re-ARM with RAMPS 1.4 (Power outputs: Spindle, Controller Fan)
+#define BOARD_RAMPS_S3DP_24  17492  // Re-ARM with RAMPS 1.6+ (Power outputs: Hotend0, Hotend1, Fan)
+
 #define BOARD_MKS_SBASE           1750  // MKS-Sbase (Power outputs: Hotend0, Hotend1, Bed, Fan)
 #define BOARD_AZSMZ_MINI          1751  // AZSMZ Mini
 #define BOARD_AZTEEG_X5_GT        1752  // Azteeg X5 GT (Power outputs: Hotend0, Hotend1, Bed, Fan)

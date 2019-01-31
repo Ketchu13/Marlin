@@ -199,9 +199,8 @@
  */
 #define USE_CONTROLLER_FAN
 #if ENABLED(USE_CONTROLLER_FAN)
-  //#define CONTROLLER_FAN_PIN -1        // Set a custom pin for the controller fan
-  #define CTRF_COOLHBMOSFET
-  #define CONTROLLERFAN_SECS 60          // Duration in seconds for the fan to run after all motors are disabled
+  #define CONTROLLER_FAN_PIN  P1_20 //(11)   SERVO0_PIN        // Set a custom pin for the controller fan
+  #define CONTROLLERFAN_SECS  60          // Duration in seconds for the fan to run after all motors are disabled
   #define CONTROLLERFAN_SPEED 255        // 255 == full speed
 #endif
 
@@ -501,7 +500,7 @@
   //#define BACKLASH_SMOOTHING_MM 3 // (mm)
 
   // Add runtime configuration and tuning of backlash values (M425)
-  //#define BACKLASH_GCODE
+  #define BACKLASH_GCODE
 
   #if ENABLED(BACKLASH_GCODE)
     // Measure the Z backlash when probing (G29) and set with "M425 Z"
@@ -607,7 +606,7 @@
 #endif
 
 // Include a page of printer information in the LCD Main Menu
-//#define LCD_INFO_MENU
+#define LCD_INFO_MENU
 
 // Scroll a longer status message into view
 #define STATUS_MESSAGE_SCROLLING
@@ -630,7 +629,7 @@
     //#define PROGRESS_MSG_ONCE           // Show the message for MSG_TIME then clear it
     //#define LCD_PROGRESS_BAR_TEST       // Add a menu item to test the progress bar
   #endif
-#endif
+#endif // HAS_PRINT_PROGRESS
 
 /**
  * LED Control Menu
@@ -709,7 +708,7 @@
 
   // SD Card Sorting options
   #if ENABLED(SDCARD_SORT_ALPHA)
-    #define SDSORT_LIMIT       40     // Maximum number of sorted items (10-256). Costs 27 bytes each.
+    #define SDSORT_LIMIT       256     // Maximum number of sorted items (10-256). Costs 27 bytes each.
     #define FOLDER_SORTING     -1     // -1=above  0=none  1=below
     #define SDSORT_GCODE       false  // Allow turning sorting on/off with LCD and M34 g-code.
     #define SDSORT_USES_RAM    false  // Pre-allocate a static array for faster pre-sorting.
@@ -724,7 +723,7 @@
   //#define LONG_FILENAME_HOST_SUPPORT
 
   // Enable this option to scroll long filenames in the SD card menu
-  #define SCROLL_LONG_FILENAMES
+  //#define SCROLL_LONG_FILENAMES
 
   /**
    * This option allows you to abort SD printing when any endstop is triggered.
@@ -852,8 +851,8 @@
   #define STATUS_BED_ANIM             // Use a second bitmap to indicate bed heating
   //#define STATUS_ALT_BED_BITMAP     // Use the alternative bed bitmap
   //#define STATUS_ALT_FAN_BITMAP     // Use the alternative fan bitmap
-  #define STATUS_FAN_FRAMES 3       // :[0,1,2,3,4] Number of fan animation frames
-  #define STATUS_HEAT_PERCENT       // Show heating in a progress bar
+  #define STATUS_FAN_FRAMES 3         // :[0,1,2,3,4] Number of fan animation frames
+  #define STATUS_HEAT_PERCENT         // Show heating in a progress bar
 
 #endif // HAS_GRAPHICAL_LCD
 
@@ -921,7 +920,7 @@
  * See http://marlinfw.org/docs/features/lin_advance.html for full instructions.
  * Mention @Sebastianv650 on GitHub to alert the author of any issues.
  */
-//#define LIN_ADVANCE
+#define LIN_ADVANCE
 #if ENABLED(LIN_ADVANCE)
   #define LIN_ADVANCE_K 0.22  // Unit: mm compression per 1mm/s extruder speed
   //#define LA_DEBUG          // If enabled, this will generate debug information output over USB.
@@ -975,7 +974,7 @@
 #endif
 
 // Support for G5 with XYZE destination and IJPQ offsets. Requires ~2666 bytes.
-//#define BEZIER_CURVE_SUPPORT
+#define BEZIER_CURVE_SUPPORT
 
 // G38.2 and G38.3 Probe Target
 // Set MULTIPLE_PROBING if you want G38 to double touch
@@ -1012,7 +1011,7 @@
  *
  * Override the default value based on the driver type set in Configuration.h.
  */
-//#define MINIMUM_STEPPER_PULSE 0
+//#define MINIMUM_STEPPER_PULSE 2
 
 /**
  * Maximum stepping rate (in Hz) the stepper driver allows
@@ -1060,13 +1059,13 @@
 // For debug-echo: 128 bytes for the optimal speed.
 // Other output doesn't need to be that speedy.
 // :[0, 2, 4, 8, 16, 32, 64, 128, 256]
-#define TX_BUFFER_SIZE 128
+#define TX_BUFFER_SIZE 256
 
 // Host Receive Buffer Size
 // Without XON/XOFF flow control (see SERIAL_XON_XOFF below) 32 bytes should be enough.
 // To use flow control, set this buffer size to at least 1024 bytes.
 // :[0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
-//#define RX_BUFFER_SIZE 2048
+#define RX_BUFFER_SIZE 2048
 
 #if RX_BUFFER_SIZE >= 1024
   // Enable to have the controller send XON/XOFF control characters to
@@ -1224,7 +1223,7 @@
   //#define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
   //#define HOME_BEFORE_FILAMENT_CHANGE           // Ensure homing has been completed prior to parking for filament change
 
-  #define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
+  //#define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
   //#define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
 #endif
 
@@ -1342,28 +1341,31 @@
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT     675  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #define X_MICROSTEPS   16  // 0..256
-  #endif
-
-  #if AXIS_IS_TMC(X2)
-    #define X2_CURRENT    800
-    #define X2_MICROSTEPS  16
+    // Creality CR-10 X Axis Stepper Motor #40 3D Printer Parts jk42hs40-1004a-02F
+    #define X_CURRENT          675  // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_MICROSTEPS        16  // 0..256
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #define Y_CURRENT     730
-    #define Y_MICROSTEPS   16
-  #endif
-
-  #if AXIS_IS_TMC(Y2)
-    #define Y2_CURRENT    800
-    #define Y2_MICROSTEPS  16
+    // Creality CR-10 Y Axis Stepper Motor #40 3D Printer Parts jk42hs40-1004a-02F
+    #define Y_CURRENT          730  
+    #define Y_MICROSTEPS        16
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     930
-    #define Z_MICROSTEPS   16
+    // Creality CR-10 Z Axis Stepper Motor #34 3D Printer Parts jk42hs34-0844ya-06F
+    #define Z_CURRENT          930  
+    #define Z_MICROSTEPS        16
+  #endif
+
+  #if AXIS_IS_TMC(X2)
+    #define X2_CURRENT         800
+    #define X2_MICROSTEPS       16
+  #endif
+
+  #if AXIS_IS_TMC(Y2)
+    #define Y2_CURRENT         800
+    #define Y2_MICROSTEPS       16
   #endif
 
   #if AXIS_IS_TMC(Z2)
@@ -1377,12 +1379,14 @@
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT   1180
-    #define E0_MICROSTEPS  16
-  #endif
+    //E3D compact powerfull stepper motor
+    #define E0_CURRENT     1180 
+    #define E0_MICROSTEPS    16
+  #endif  
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT    730
+    // Creality CR-10 Extruder Stepper Motor #40 3D Printer Parts jk42hs40-1004a-02F
+    #define E1_CURRENT    730 
     #define E1_MICROSTEPS  16
   #endif
 
@@ -1480,7 +1484,7 @@
   #define MONITOR_DRIVER_STATUS
 
   #if ENABLED(MONITOR_DRIVER_STATUS)
-    #define CURRENT_STEP_DOWN     50  // [mA]
+    #define CURRENT_STEP_DOWN     20  // [mA]
     #define REPORT_CURRENT_CHANGE
     //#define STOP_ON_ERROR
   #endif
@@ -1907,7 +1911,7 @@
  * Add G-codes M810-M819 to define and run G-code macros.
  * Macros are not saved to EEPROM.
  */
-//#define GCODE_MACROS
+#define GCODE_MACROS
 #if ENABLED(GCODE_MACROS)
   #define GCODE_MACROS_SLOTS       5  // Up to 10 may be used
   #define GCODE_MACROS_SLOT_SIZE  50  // Maximum length of a single macro
@@ -1950,22 +1954,9 @@
  * Specify an action command to send to the host on pause and resume.
  * Will be sent in the form '//action:ACTION_ON_PAUSE', e.g. '//action:pause'.
  * The host must be configured to handle the action command.
- * 
- *   PAUSE / RESUME : Used in non-parking scenarios where the host handles the
- *                    action while Marlin continues to process G-Code. (M24/M25)
- * 
- * PAUSED / RESUMED : Used in scenarios where Marlin handles pause and filament-
- *                    change actions and the host needs to stop sending commands
- *                    until the machine is ready to resume. (M125/M600)
- * 
- *           CANCEL : Instructs the host to abort the print job. Used when the
- *                    print is canceled from the LCD menu.
  */
-#define ACTION_ON_PAUSE   "pause"
-#define ACTION_ON_RESUME  "resume"
-#define ACTION_ON_PAUSED  "paused"
-#define ACTION_ON_RESUMED "resumed"
-#define ACTION_ON_CANCEL  "cancel"
+#define ACTION_ON_PAUSE "pause"
+#define ACTION_ON_RESUME "resume"
 
 //===========================================================================
 //====================== I2C Position Encoder Settings ======================

@@ -1,0 +1,47 @@
+// https://www.instagram.com/
+setInterval(function(){
+    $disabled = false;
+    if (!$disabled){
+        var hearts = document.getElementsByClassName("fr66n");
+        for (var i = 0; i < hearts.length; i++) {
+          df = hearts[i].getElementsByTagName("button");
+          if (df[0].className.indexOf("coreSpriteHeartOpen ")>=0) {
+            df[0].click()
+            break;
+          }
+        }
+    }
+}, 2000);
+
+
+function pageScroll() {
+    window.scrollBy(0,30);
+    scrolldelay = setTimeout(pageScroll,20);
+}
+
+pageScroll();
+
+0 - 
+1 -          
+            
+1 - get if ironing is active
+2 - get if ironning is only active for top layer 
+3 - for each plate check if ever gcodes list is processed
+4 - for each layer check if ironing is applied before the end
+    y:
+        a - check if current layer number is in ironing layer list
+            y - continue
+            n - 1) get "last type:skin" position
+                2) get E value after ironing applied
+                3) replace ironing gcodes by a comment ";processed"
+                4) Set E with the last ironing E value G92 E<last ironing E>
+        b - set processed_bool to true 
+        c - continue
+
+    n:
+        continue
+
+5 - check if processed_bool == true
+    y - add comment to gcodelist[0] (gcode start script) to prevent multi processing
+6* - write processed layer number in new
+7 - return gcodeDict

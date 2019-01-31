@@ -114,7 +114,7 @@
       response = spiTransfer(buf[i]);
     }
     UNUSED(response);
-    WRITE(SS_PIN, HIGH);
+    //WRITE(SS_PIN, HIGH);
   }
 
 #else

@@ -28,13 +28,6 @@
 #include "../../module/motion.h"
 #include "../../module/temperature.h"
 
-#if ENABLED(SINGLENOZZLE)
-  #define _ALT_P active_extruder
-  #define _CNT_P EXTRUDERS
-#else
-  #define _ALT_P MIN(active_extruder, FAN_COUNT - 1)
-  #define _CNT_P MIN(EXTRUDERS, FAN_COUNT)
-#endif
 
 /**
  * M106: Set Fan Speed
@@ -50,19 +43,30 @@
  *           3-255 = Set the speed for use with T2
  */
 void GcodeSuite::M106() {
-  const uint8_t p = parser.byteval('P', _ALT_P);
+  bool report = true;
+  const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
 
-  if (p < _CNT_P) {
+  if (!parser.seenval('V')) {
 
-    #if ENABLED(EXTRA_FAN_SPEED)
-      const uint16_t t = parser.intval('T');
-      if (t > 0) return thermalManager.set_temp_fan_speed(p, t);
-    #endif
+   if (p < MIN(EXTRUDERS, FAN_COUNT)) {
 
-    uint16_t s = parser.ushortval('S', 255);
-    NOMORE(s, 255U);
+     #if ENABLED(EXTRA_FAN_SPEED)
+       const uint16_t t = parser.intval('T');
+       if (t > 0) return thermalManager.set_temp_fan_speed(p, t);
+     #endif
 
-    thermalManager.set_fan_speed(p, s);
+     uint16_t s = parser.ushortval('S', 255);
+     NOMORE(s, 255U);
+ 
+     thermalManager.set_fan_speed(p, s);
+   }
+  }
+  if (report) {
+    SERIAL_ECHOPGM("Fan(s) Speed: ");
+    for (uint8_t i = 0; i < FAN_COUNT; i++) {
+      SERIAL_ECHOPAIR(" Fan", i);
+      SERIAL_ECHOLNPAIR("=", thermalManager.lcd_fanSpeedActual(i));
+    }
   }
 }
 
@@ -70,7 +74,7 @@ void GcodeSuite::M106() {
  * M107: Fan Off
  */
 void GcodeSuite::M107() {
-  const uint8_t p = parser.byteval('P', _ALT_P);
+  const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
   thermalManager.set_fan_speed(p, 0);
 }
 

@@ -71,6 +71,8 @@
   #include "pins_RAMPS.h"             // ATmega1280, ATmega2560                     env:megaatmega1280 env:megaatmega2560
 #elif MB(RAMPS_14_EEF)
   #include "pins_RAMPS.h"             // ATmega1280, ATmega2560                     env:megaatmega1280 env:megaatmega2560
+#elif MB(RAMPS_S3DP)
+  #include "pins_RAMPS_S3DP.h"        // ATmega1280, ATmega2560                     env:megaatmega1280 env:megaatmega2560
 #elif MB(RAMPS_14_SF)
   #include "pins_RAMPS.h"             // ATmega1280, ATmega2560                     env:megaatmega1280 env:megaatmega2560
 #elif MB(RAMPS_PLUS_EFB)
@@ -299,7 +301,8 @@
 //
 // LPC1768 ARM Cortex M3
 //
-
+#elif MB(RAMPS_S3DP_24)
+  #include "pins_RAMPS_S3DP_24.h" // LPC1768
 #elif MB(RAMPS_14_RE_ARM_EFB)
   #include "pins_RAMPS_RE_ARM.h"      // LPC1768                                    env:LPC1768
 #elif MB(RAMPS_14_RE_ARM_EEB)

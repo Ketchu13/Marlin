@@ -36,9 +36,9 @@ void controllerfan_update() {
   if (ELAPSED(ms, nextMotorCheck)) {
     nextMotorCheck = ms + 2500UL; // Not a time critical function, so only check every 2.5s
 
-    // If any of the drivers or the bed are enabled...
+    // If any of the drivers or the bed and CTRF_COOLHBMOSFET are enabled...
     if (X_ENABLE_READ == X_ENABLE_ON || Y_ENABLE_READ == Y_ENABLE_ON || Z_ENABLE_READ == Z_ENABLE_ON
-      #if HAS_HEATED_BED
+      #if HAS_HEATED_BED && ENABLED(CTRF_COOLHBMOSFET)
         || thermalManager.soft_pwm_amount_bed > 0
       #endif
         #if HAS_X2_ENABLE
