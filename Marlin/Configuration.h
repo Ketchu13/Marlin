@@ -174,6 +174,15 @@
     //#define E_MUX1_PIN 42  // Needed for 3 to 8 inputs
     //#define E_MUX2_PIN 44  // Needed for 5 to 8 inputs
   #endif
+  /**
+   * Prusa Multi-Material Unit v2
+   *
+   * Requires NOZZLE_PARK_FEATURE to park print head in case MMU unit fails.
+   * Requires EXTRUDERS = 5
+   *
+   * For additional configuration see Configuration_adv.h
+   */
+  //#define PRUSA_MMU2
 
   // A dual extruder that uses a single stepper motor
   //#define SWITCHING_EXTRUDER
