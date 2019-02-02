@@ -84,8 +84,8 @@
    * Enable PID_ADAPTIVE_FAN_SLOWING_OFF for disable slowing fan speed during
    * PID relay autotune.
    **/
-  #define ADAPTIVE_FAN_SLOWING               
-  #if ENABLED(ADAPTIVE_FAN_SLOWING)
+  //#define ADAPTIVE_FAN_SLOWING               
+  #if ENABLED(ADAPTIVE_FAN_SLOWING) && ENABLED(PIDTEMP)
     #define PID_ADAPTIVE_FAN_SLOWING_OFF
   #endif
   
