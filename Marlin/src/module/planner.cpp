@@ -1264,6 +1264,9 @@ void Planner::check_axes_activity() {
     #endif
 
     #if ENABLED(FAN_SOFT_PWM)
+      #if FAN_COUNT > 0
+        SERIAL_ECHOPGM("Fan(s) Speed: ");
+      #endif
       #if HAS_FAN0
         thermalManager.soft_pwm_amount_fan[0] = CALC_FAN_SPEED(0);
       #endif
@@ -1285,6 +1288,16 @@ void Planner::check_axes_activity() {
       #endif
     #endif
 
+    #if HAS_FAN0
+      SERIAL_ECHOLNPAIR(" Fan0=", CALC_FAN_SPEED(0));
+    #endif
+    #if HAS_FAN1
+      SERIAL_ECHOLNPAIR(" Fan1=", CALC_FAN_SPEED(1));
+    #endif
+    #if HAS_FAN2
+      SERIAL_ECHOLNPAIR(" Fan2=", CALC_FAN_SPEED(2));
+    #endif
+    
   #endif // FAN_COUNT > 0
 
   #if ENABLED(AUTOTEMP)
