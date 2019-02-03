@@ -183,7 +183,7 @@
 // Extruder runout prevention.
 // If the machine is idle and the temperature over MINTEMP
 // then extrude some filament every couple of SECONDS.
-#define EXTRUDER_RUNOUT_PREVENT
+//#define EXTRUDER_RUNOUT_PREVENT
 #if ENABLED(EXTRUDER_RUNOUT_PREVENT)
   #define EXTRUDER_RUNOUT_MINTEMP 200
   #define EXTRUDER_RUNOUT_SECONDS 30
@@ -985,7 +985,7 @@
 #endif
 
 // Support for G5 with XYZE destination and IJPQ offsets. Requires ~2666 bytes.
-//#define BEZIER_CURVE_SUPPORT
+#define BEZIER_CURVE_SUPPORT
 
 // G38.2 and G38.3 Probe Target
 // Set MULTIPLE_PROBING if you want G38 to double touch
@@ -1352,7 +1352,7 @@
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT     675  // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_CURRENT     700  // (mA) RMS current. Multiply by 1.414 for peak current.
     #define X_MICROSTEPS   16  // 0..256
   #endif
 
@@ -1362,7 +1362,7 @@
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #define Y_CURRENT     730
+    #define Y_CURRENT     740
     #define Y_MICROSTEPS   16
   #endif
 
@@ -1372,7 +1372,7 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     930
+    #define Z_CURRENT     940
     #define Z_MICROSTEPS   16
   #endif
 
@@ -1507,10 +1507,10 @@
   #define X2_HYBRID_THRESHOLD    100
   #define Y_HYBRID_THRESHOLD     100
   #define Y2_HYBRID_THRESHOLD    100
-  #define Z_HYBRID_THRESHOLD       3
+  #define Z_HYBRID_THRESHOLD       1
   #define Z2_HYBRID_THRESHOLD      3
   #define Z3_HYBRID_THRESHOLD      3
-  #define E0_HYBRID_THRESHOLD     30
+  #define E0_HYBRID_THRESHOLD     25
   #define E1_HYBRID_THRESHOLD     30
   #define E2_HYBRID_THRESHOLD     30
   #define E3_HYBRID_THRESHOLD     30
