@@ -144,7 +144,7 @@ bool enqueue_and_echo_command(const char* cmd) {
   //SERIAL_ECHOPGM("\") \n");
 
   if (*cmd == 0 || *cmd == '\n' || *cmd == '\r') {
-    //SERIAL_ECHOPGM("Null command found...   Did not queue!\n");
+    //SERIAL_ECHOLNPGM("Null command found...   Did not queue!");
     return true;
   }
 
@@ -251,7 +251,7 @@ void flush_and_request_resend() {
   ok_to_send();
 }
 
-static bool serial_data_available() {
+inline bool serial_data_available() {
   return false
     || MYSERIAL0.available()
     #if NUM_SERIAL > 1
@@ -260,7 +260,7 @@ static bool serial_data_available() {
   ;
 }
 
-static int read_serial(const uint8_t index) {
+inline int read_serial(const uint8_t index) {
   switch (index) {
     case 0: return MYSERIAL0.read();
     #if NUM_SERIAL > 1
@@ -287,7 +287,7 @@ void gcode_line_error(PGM_P err, uint8_t port) {
     #define CARD_ECHOLN_P(V) SERIAL_ECHOLN_P(card.transfer_port, V)
   #endif
 
-  static bool serial_data_available(const uint8_t index) {
+  inline bool serial_data_available(const uint8_t index) {
     switch (index) {
       case 0: return MYSERIAL0.available();
       #if NUM_SERIAL > 1
@@ -536,6 +536,10 @@ void gcode_line_error(PGM_P err, uint8_t port) {
 
 #endif // FAST_FILE_TRANSFER
 
+FORCE_INLINE bool is_M29(const char * const cmd) {
+  return cmd[0] == 'M' && cmd[1] == '2' && cmd[2] == '9' && !WITHIN(cmd[3], '0', '9');
+}
+
 /**
  * Get all commands waiting on the serial port and queue them.
  * Exit when the buffer is full or when no more characters are
@@ -631,7 +635,8 @@ inline void get_serial_commands() {
           gcode_LastN = gcode_N;
         }
         #if ENABLED(SDSUPPORT)
-          else if (card.flag.saving && command[0] == 'M' && command[1] == '2' && command[2] == '9' && (command[3] == '\0' || command[3] == ' '))
+          // Pronterface "M29" and "M29 " has no line number 
+          else if (card.flag.saving && !is_M29(command))
             return gcode_line_error(PSTR(MSG_ERR_NO_CHECKSUM), i);
         #endif
 
@@ -840,7 +845,7 @@ void advance_command_queue() {
 
     if (card.flag.saving) {
       char* command = command_queue[cmd_queue_index_r];
-      if (command[0] == 'M' && command[1] == '2' && command[2] == '9' && (command[3] == '\0' || command[3] == ' ')) {
+      if (is_M29(command)) {
         // M29 closes the file
         card.closefile();
         SERIAL_ECHOLNPGM(MSG_FILE_SAVED);

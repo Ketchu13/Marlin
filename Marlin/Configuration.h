@@ -174,6 +174,7 @@
     //#define E_MUX1_PIN 42  // Needed for 3 to 8 inputs
     //#define E_MUX2_PIN 44  // Needed for 5 to 8 inputs
   #endif
+
   /**
    * Prusa Multi-Material Unit v2
    *
@@ -194,12 +195,13 @@
     #endif
   #endif
 
-  // A dual-nozzle that uses a servomotor to raise/lower one of the nozzles
-  //#define SWITCHING_NOZZLE
-  #if ENABLED(SWITCHING_NOZZLE)
-    #define SWITCHING_NOZZLE_SERVO_NR 0
-    #define SWITCHING_NOZZLE_SERVO_ANGLES { 0, 90 }   // Angles for E0, E1
-  #endif
+// A dual-nozzle that uses a servomotor to raise/lower one (or both) of the nozzles
+//#define SWITCHING_NOZZLE
+#if ENABLED(SWITCHING_NOZZLE)
+  #define SWITCHING_NOZZLE_SERVO_NR 0
+  //#define SWITCHING_NOZZLE_E1_SERVO_NR 1          // If two servos are used, the index of the second
+  #define SWITCHING_NOZZLE_SERVO_ANGLES { 0, 90 }   // Angles for E0, E1 (single servo) or lowered/raised (dual servo)
+#endif
 
   /**
    * Two separate X-carriages with extruders that connect to a moving part
@@ -214,6 +216,7 @@
     #define PARKING_EXTRUDER_GRAB_DISTANCE 1            // (mm) Distance to move beyond the parking point to grab the extruder
     //#define MANUAL_SOLENOID_CONTROL                   // Manual control of docking solenoids with M380 S / M381
   #endif
+
 
   /**
    * Switching Toolhead
@@ -231,7 +234,7 @@
     #define SWITCHING_TOOLHEAD_X_POS        { 215, 0 }  // (mm) X positions for parking the extruders
   #endif
 
-  /**
+   /**
    * "Mixing Extruder"
    *   - Adds G-codes M163 and M164 to set and "commit" the current mix factors.
    *   - Extends the stepping routines to move multiple steppers in proportion to the mix.
@@ -266,7 +269,7 @@
  * :{ 0:'No power switch', 1:'ATX', 2:'X-Box 360' }
  */
 #define POWER_SUPPLY 0
-#define POWER_SUPPLY_VOLTAGE 24
+
 #if POWER_SUPPLY > 0
   // Enable this option to leave the PSU off at startup.
   // Power to steppers and heaters will need to be turned on with M80.
