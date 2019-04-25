@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -53,6 +53,12 @@ extern int8_t manual_move_axis;
   extern float manual_move_offset;
 #endif
 
+// Refresh the E factor after changing flow
+#if EXTRUDERS
+  void __lcd_refresh_e_factor_0() { planner.refresh_e_factor(0); }
+  
+#endif // EXTRUDERS
+
 //
 // Tell ui.update() to start a move to current_position" after a short delay.
 //
@@ -86,26 +92,26 @@ static void _lcd_move_xyz(PGM_P name, AxisEnum axis) {
       if (soft_endstops_enabled) switch (axis) {
         case X_AXIS:
           #if ENABLED(MIN_SOFTWARE_ENDSTOP_X)
-            min = soft_endstop_min[X_AXIS];
+            min = soft_endstop[X_AXIS].min;
           #endif
           #if ENABLED(MAX_SOFTWARE_ENDSTOP_X)
-            max = soft_endstop_max[X_AXIS];
+            max = soft_endstop[X_AXIS].max;
           #endif
           break;
         case Y_AXIS:
           #if ENABLED(MIN_SOFTWARE_ENDSTOP_Y)
-            min = soft_endstop_min[Y_AXIS];
+            min = soft_endstop[Y_AXIS].min;
           #endif
           #if ENABLED(MAX_SOFTWARE_ENDSTOP_Y)
-            max = soft_endstop_max[Y_AXIS];
+            max = soft_endstop[Y_AXIS].max;
           #endif
           break;
         case Z_AXIS:
           #if ENABLED(MIN_SOFTWARE_ENDSTOP_Z)
-            min = soft_endstop_min[Z_AXIS];
+            min = soft_endstop[Z_AXIS].min;
           #endif
           #if ENABLED(MAX_SOFTWARE_ENDSTOP_Z)
-            max = soft_endstop_max[Z_AXIS];
+            max = soft_endstop[Z_AXIS].max;
           #endif
         default: break;
       }
@@ -121,16 +127,16 @@ static void _lcd_move_xyz(PGM_P name, AxisEnum axis) {
     #endif
 
     // Get the new position
-    const float diff = float((int32_t)ui.encoderPosition) * move_menu_scale;
+    const float diff = float(int16_t(ui.encoderPosition)) * move_menu_scale;
     #if IS_KINEMATIC
       manual_move_offset += diff;
-      if ((int32_t)ui.encoderPosition < 0)
+      if (int16_t(ui.encoderPosition) < 0)
         NOLESS(manual_move_offset, min - current_position[axis]);
       else
         NOMORE(manual_move_offset, max - current_position[axis]);
     #else
       current_position[axis] += diff;
-      if ((int32_t)ui.encoderPosition < 0)
+      if (int16_t(ui.encoderPosition) < 0)
         NOLESS(current_position[axis], min);
       else
         NOMORE(current_position[axis], max);
@@ -161,7 +167,7 @@ static void _lcd_move_e(
   ui.encoder_direction_normal();
   if (ui.encoderPosition) {
     if (!ui.processing_manual_move) {
-      const float diff = float((int32_t)ui.encoderPosition) * move_menu_scale;
+      const float diff = float(int16_t(ui.encoderPosition)) * move_menu_scale;
       #if IS_KINEMATIC
         manual_move_offset += diff;
       #else
@@ -235,13 +241,14 @@ inline void lcd_move_e() { _lcd_move_e(); }
 screenFunc_t _manual_move_func_ptr;
 
 void _goto_manual_move(const float scale) {
-  ui.defer_status_screen(true);
+  ui.defer_status_screen();
   move_menu_scale = scale;
   ui.goto_screen(_manual_move_func_ptr);
 }
 void menu_move_10mm() { _goto_manual_move(10); }
 void menu_move_1mm()  { _goto_manual_move( 1); }
 void menu_move_01mm() { _goto_manual_move( 0.1f); }
+void menu_move_001mm() { _goto_manual_move( 0.01f); }
 
 void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int8_t eindex=-1) {
   _manual_move_func_ptr = func;
@@ -269,6 +276,7 @@ void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int
     MENU_ITEM(submenu, MSG_MOVE_10MM, menu_move_10mm);
     MENU_ITEM(submenu, MSG_MOVE_1MM, menu_move_1mm);
     MENU_ITEM(submenu, MSG_MOVE_01MM, menu_move_01mm);
+    MENU_ITEM(submenu, MSG_MOVE_001MM, menu_move_001mm);
   }
   END_MENU();
 }
@@ -335,7 +343,7 @@ void menu_move() {
   else
     MENU_ITEM(gcode, MSG_AUTO_HOME, PSTR("G28"));
 
-  #if ENABLED(SWITCHING_EXTRUDER) || ENABLED(SWITCHING_NOZZLE)
+  #if ANY(SWITCHING_EXTRUDER, SWITCHING_NOZZLE, MAGNETIC_SWITCHING_TOOLHEAD)
 
     #if EXTRUDERS == 6
       switch (active_extruder) {
@@ -376,7 +384,7 @@ void menu_move() {
 
   #endif
 
-  #if ENABLED(SWITCHING_EXTRUDER) || ENABLED(SWITCHING_NOZZLE)
+  #if EITHER(SWITCHING_EXTRUDER, SWITCHING_NOZZLE)
 
     // Only the current...
     MENU_ITEM(submenu, MSG_MOVE_E, lcd_move_get_e_amount);
@@ -465,7 +473,7 @@ void menu_motion() {
     #if DISABLED(PROBE_MANUALLY)
       MENU_ITEM(gcode, MSG_LEVEL_BED, PSTR("G28\nG29"));
     #endif
-    if (leveling_is_valid()) {
+    if (all_axes_homed() && leveling_is_valid()) {
       bool new_level_state = planner.leveling_active;
       MENU_ITEM_EDIT_CALLBACK(bool, MSG_BED_LEVELING, &new_level_state, _lcd_toggle_bed_leveling);
     }
@@ -483,6 +491,49 @@ void menu_motion() {
   // Disable Steppers
   //
   MENU_ITEM(gcode, MSG_DISABLE_STEPPERS, PSTR("M84"));
+//
+
+  // Flow:
+  // Flow [1-5]:
+  //
+  
+  #if EXTRUDERS == 1
+    MENU_ITEM_EDIT_CALLBACK(int3, MSG_FLOW, &planner.flow_percentage[0], 10, 999, __lcd_refresh_e_factor_0);
+  #elif EXTRUDERS
+    MENU_ITEM_EDIT_CALLBACK(int3, MSG_FLOW, &planner.flow_percentage[active_extruder], 10, 999, _lcd_refresh_e_factor);
+    #define EDIT_FLOW(N) MENU_ITEM_EDIT_CALLBACK(int3, MSG_FLOW MSG_LCD_N##N, &planner.flow_percentage[N], 10, 999, _lcd_refresh_e_factor_##N)
+    EDIT_FLOW(0);
+    EDIT_FLOW(1);
+    #if EXTRUDERS > 2
+      EDIT_FLOW(2);
+      #if EXTRUDERS > 3
+        EDIT_FLOW(3);
+        #if EXTRUDERS > 4
+          EDIT_FLOW(4);
+          #if EXTRUDERS > 5
+            EDIT_FLOW(5);
+          #endif // EXTRUDERS > 5
+        #endif // EXTRUDERS > 4
+      #endif // EXTRUDERS > 3
+    #endif // EXTRUDERS > 2
+  #endif // EXTRUDERS
+
+  //
+  // Babystep X:
+  // Babystep Y:
+  // Babystep Z:
+  //
+  #if ENABLED(BABYSTEPPING)
+    #if ENABLED(BABYSTEP_XY)
+      MENU_ITEM(submenu, MSG_BABYSTEP_X, lcd_babystep_x);
+      MENU_ITEM(submenu, MSG_BABYSTEP_Y, lcd_babystep_y);
+    #endif
+    #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+      MENU_ITEM(submenu, MSG_ZPROBE_ZOFFSET, lcd_babystep_zoffset);
+    #else
+      MENU_ITEM(submenu, MSG_BABYSTEP_Z, lcd_babystep_z);
+    #endif
+  #endif
 
   END_MENU();
 }

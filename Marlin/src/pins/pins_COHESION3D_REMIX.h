@@ -1,7 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
- * Copyright (C) 2017 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -25,7 +24,7 @@
  * Cohesion3D ReMix pin assignments
  */
 
-#if !defined(TARGET_LPC1768) && !defined(LPC1769)
+#ifndef LPC1769
   #error "Oops! Make sure you have the LPC1769 environment selected in your IDE."
 #endif
 
@@ -140,7 +139,7 @@
 //
 #if ENABLED(SPINDLE_LASER_ENABLE)
   #undef HEATER_0_PIN
-  #define SPINDLE_LASER_ENABLE_PIN  P2_07   // FET 1
+  #define SPINDLE_LASER_ENA_PIN     P2_07   // FET 1
   #undef HEATER_BED_PIN
   #define SPINDLE_LASER_PWM_PIN     P2_05   // Bed FET
   #undef FAN_PIN

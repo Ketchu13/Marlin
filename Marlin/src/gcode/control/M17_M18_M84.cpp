@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -25,7 +25,7 @@
 #include "../../lcd/ultralcd.h"
 #include "../../module/stepper.h"
 
-#if ENABLED(AUTO_BED_LEVELING_UBL) && ENABLED(ULTRA_LCD)
+#if BOTH(AUTO_BED_LEVELING_UBL, ULTRA_LCD)
   #include "../../feature/bedlevel/bedlevel.h"
 #endif
 

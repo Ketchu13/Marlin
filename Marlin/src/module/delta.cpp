@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -45,6 +45,9 @@
   #include "../feature/tmc_util.h"
   #include "stepper_indirection.h"
 #endif
+
+#define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
+#include "../core/debug_out.h"
 
 // Initialized by settings.load()
 float delta_height,
@@ -216,9 +219,7 @@ void forward_kinematics_DELTA(const float &z1, const float &z2, const float &z3)
  * This is like quick_home_xy() but for 3 towers.
  */
 void home_delta() {
-  #if ENABLED(DEBUG_LEVELING_FEATURE)
-    if (DEBUGGING(LEVELING)) DEBUG_POS(">>> home_delta", current_position);
-  #endif
+  if (DEBUGGING(LEVELING)) DEBUG_POS(">>> home_delta", current_position);
   // Init the current position of all carriages to 0,0,0
   ZERO(current_position);
   ZERO(destination);
@@ -264,9 +265,7 @@ void home_delta() {
 
   sync_plan_position();
 
-  #if ENABLED(DEBUG_LEVELING_FEATURE)
-    if (DEBUGGING(LEVELING)) DEBUG_POS("<<< home_delta", current_position);
-  #endif
+  if (DEBUGGING(LEVELING)) DEBUG_POS("<<< home_delta", current_position);
 }
 
 #endif // DELTA

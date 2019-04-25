@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -41,7 +41,7 @@ void GcodeSuite::M403() {
          type = parser.intval('F', -1);
 
   if (WITHIN(index, 0, 4) && WITHIN(type, 0, 2))
-    mmu2.setFilamentType(index, type);
+    mmu2.set_filament_type(index, type);
   else
     SERIAL_ECHO_MSG("M403 - bad arguments.");
 }
