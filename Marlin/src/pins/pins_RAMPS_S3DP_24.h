@@ -106,6 +106,35 @@
   #define TMC_SW_SCK       P1_09   // ETH
 #endif
 
+#if HAS_DRIVER(TMC2208)
+  /**
+   * TMC2208 stepper drivers
+   *
+   * Hardware serial communication ports.
+   * If undefined software serial is used according to the pins below
+   */
+
+  /**
+   * Software serial
+   */
+
+   // P2_08 E1-Step
+   // P2_13 E1-Dir
+
+  #define X_SERIAL_TX_PIN    P2_13
+  #define X_SERIAL_RX_PIN    P2_13
+
+  #define Y_SERIAL_TX_PIN    P0_00
+  #define Y_SERIAL_RX_PIN    P0_00
+
+  #define Z_SERIAL_TX_PIN    P0_01
+  #define Z_SERIAL_RX_PIN    P0_01
+
+  #define E0_SERIAL_TX_PIN   P2_08
+  #define E0_SERIAL_RX_PIN   P2_08
+
+#endif
+
 //
 // Temperature Sensors
 //  3.3V max when defined as an analog input
@@ -115,7 +144,6 @@
 #else
   #define TEMP_0_PIN          5   // A5 - (49) - SD_DETECT_PIN 1.31
 #endif
-//#define TEMP_0_PIN          5   // A5 - (49) - SD_DETECT_PIN1.31
 #define TEMP_BED_PIN        1   // A1 (T1) - (68) - TEMP_BED_PIN
 #define TEMP_1_PIN          4   // A4 - (37) - BUZZER_PIN1.30
 //#define TEMP_2_PIN          3   // A3 - (63) - J5-3 & AUX-2
@@ -171,7 +199,7 @@
   #define MAX6675_SS_PIN   P1_28
 #endif
 
-#if ENABLED(CASE_LIGHT_ENABLE) && !PIN_EXISTS(CASE_LIGHT) && !defined(SPINDLE_LASER_ENABLE_PIN)
+#if ENABLED(CASE_LIGHT_ENABLE) && !PIN_EXISTS(CASE_LIGHT) && !defined(SPINDLE_LASER_ENA_PIN)
   #if !defined(NUM_SERVOS) || NUM_SERVOS < 4   // Try to use servo connector
     #define CASE_LIGHT_PIN P1_18   // (4) MUST BE HARDWARE PWM
   #endif
@@ -181,11 +209,11 @@
 // M3/M4/M5 - Spindle/Laser Control
 //            Use servo pins, if available
 //
-#if ENABLED(SPINDLE_LASER_ENABLE) && !PIN_EXISTS(SPINDLE_LASER_ENABLE)
+#if ENABLED(SPINDLE_LASER_ENABLE) && !PIN_EXISTS(SPINDLE_LASER_ENA)
   #if NUM_SERVOS > 1
     #error "SPINDLE_LASER_ENABLE requires 3 free servo pins."
   #endif
-  #define SPINDLE_LASER_ENABLE_PIN SERVO1_PIN   // (6) Pin should have a pullup/pulldown!
+  #define SPINDLE_LASER_ENA_PIN    SERVO1_PIN   // (6) Pin should have a pullup/pulldown!
   #define SPINDLE_LASER_PWM_PIN    SERVO3_PIN   // (4) MUST BE HARDWARE PWM
   #define SPINDLE_DIR_PIN          SERVO2_PIN   // (5)
 #endif
@@ -289,8 +317,28 @@
     #if ENABLED(FYSETC_MINI_12864)
       #define DOGLCD_SCK   P0_15
       #define DOGLCD_MOSI  P0_18
-      #define DOGLCD_CS    P1_09  // use Ethernet connector for EXP1 cable signals
+
+      // EXP1 on LCD adapter is not usable - using Ethernet connector instead
+      #define DOGLCD_CS    P1_09
       #define DOGLCD_A0    P1_14
+      //#define FORCE_SOFT_SPI    // Use this if default of hardware SPI causes display problems
+                                  //   results in LCD soft SPI mode 3, SD soft SPI mode 0
+
+      #define LCD_RESET_PIN  P0_16   // Must be high or open for LCD to operate normally.
+
+      #if EITHER(FYSETC_MINI_12864_1_2, FYSETC_MINI_12864_2_0)
+        #ifndef RGB_LED_R_PIN
+          #define RGB_LED_R_PIN P1_00
+        #endif
+        #ifndef RGB_LED_G_PIN
+          #define RGB_LED_G_PIN P1_01
+        #endif
+        #ifndef RGB_LED_B_PIN
+          #define RGB_LED_B_PIN P1_08
+        #endif
+      #elif ENABLED(FYSETC_MINI_12864_2_1)
+        #define NEOPIXEL_PIN    P1_00
+      #endif
     #else
       #define DOGLCD_CS    P0_26   // (63) J5-3 & AUX-2
       #define DOGLCD_A0    P2_06   // (59) J3-8 & AUX-2

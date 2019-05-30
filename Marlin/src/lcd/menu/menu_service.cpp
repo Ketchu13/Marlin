@@ -36,12 +36,12 @@ inline void _menu_service(const int index, PGM_P const name) {
   strncpy_P(sram, name, 29);
   do_select_screen(
     PSTR(MSG_BUTTON_RESET), PSTR(MSG_BUTTON_CANCEL),
-    [&index]()->selectFunc_t{
+    []{
       print_job_timer.resetServiceInterval(index);
       ui.completion_feedback(true);
       ui.reset_status();
       ui.return_to_status();
-    }(),
+    },
     ui.goto_previous_screen,
     PSTR(MSG_SERVICE_RESET), sram, PSTR("?")
   );
