@@ -107,9 +107,9 @@
   #define TMC_SW_SCK       P0_04
 #endif
 
-#if HAS_DRIVER(TMC2208)
+#if HAS_DRIVER(TMC2208) || HAS_DRIVER(TMC2209)
     /**
-   * TMC2208 stepper drivers
+   * TMC2208/TMC2209 stepper drivers
    *
    * Hardware serial communication ports.
    * If undefined software serial is used according to the pins below
@@ -207,10 +207,13 @@
     #if ENABLED(FYSETC_MINI_12864)
       #define DOGLCD_CS    P1_18
       #define DOGLCD_A0    P1_19
+      #define DOGLCD_SCK   P0_15
+      #define DOGLCD_MOSI  P0_18
+      #define FORCE_SOFT_SPI
 
       #define LCD_BACKLIGHT_PIN -1
 
-      //#define FORCE_SOFT_SPI    // Use this if default of hardware SPI causes display problems
+      #define FORCE_SOFT_SPI      // Use this if default of hardware SPI causes display problems
                                   //   results in LCD soft SPI mode 3, SD soft SPI mode 0
 
       #define LCD_RESET_PIN P1_20   // Must be high or open for LCD to operate normally.

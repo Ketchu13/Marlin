@@ -419,7 +419,7 @@ static const hd44780_charmap_t g_hd44780_charmap_device[] PROGMEM = {
     {IV('⎲'), 0x12, 0},
     {IV('⎳'), 0x13, 0},
 
-    {IV('⏱'), 0x07, 0}, // Marlin special: '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛🕜🕝🕞🕟🕠🕡🕢🕣🕤🕥🕦🕧 ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
+    {IV('⏱'), 0x07, 0}, // Marlin special: '???????????????????????? ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
     {IV('┌'), 0xC9, 0},
     {IV('┐'), 0xCA, 0},
     {IV('└'), 0xCB, 0},
@@ -853,15 +853,15 @@ static const hd44780_charmap_t g_hd44780_charmap_common[] PROGMEM = {
   {IV('≡'), '=', 0}, // 2261
   {IV('≤'), '<', '='},// 2264, ≤≥ ⩽⩾
   {IV('≥'), '>', '='}, // 2265
-  {IV('⏱'), 0x07, 0}, // 23F1, Marlin special: '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛🕜🕝🕞🕟🕠🕡🕢🕣🕤🕥🕦🕧 ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
+  {IV('⏱'), 0x07, 0}, // 23F1, Marlin special: '???????????????????????? ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
 
   {IV('゠'), '=', 0}, // 30A0
 
   // ⏰⏱⏲⏳◴◵◶◷
   // ⏻⏼♁♂
   //{IV(''), 0x00, 0}, // Marlin special: ''  LCD_STR_BEDTEMP (0x07)
-  {IV('🌡'), 0x02, 0}, // D83CDF21 Marlin special: '🌡'  LCD_STR_THERMOMETER (0x08)
-  {IV('📂'), 0x05, 0}, // D83DDCC2 Marlin special: '📁📂'  LCD_STR_FOLDER (0x02)
+  {IV('?'), 0x02, 0}, // D83CDF21 Marlin special: '?'  LCD_STR_THERMOMETER (0x08)
+  {IV('?'), 0x05, 0}, // D83DDCC2 Marlin special: '??'  LCD_STR_FOLDER (0x02)
   //{IV(''), 0x06, 0}, // Marlin special: ''  LCD_STR_FEEDRATE (0x06)
 };
 
@@ -889,7 +889,7 @@ int lcd_put_wchar_max(wchar_t c, pixel_len_t max_length) {
   int ret;
   size_t idx = 0;
   hd44780_charmap_t pinval;
-  hd44780_charmap_t *copy_address = NULL;
+  hd44780_charmap_t *copy_address = nullptr;
   pinval.uchar = c;
   pinval.idx = -1;
 
@@ -900,7 +900,7 @@ int lcd_put_wchar_max(wchar_t c, pixel_len_t max_length) {
     lcd.write((uint8_t)c);
     return 1;
   }
-  copy_address = NULL;
+  copy_address = nullptr;
   ret = pf_bsearch_r((void *)g_hd44780_charmap_device, COUNT(g_hd44780_charmap_device), pf_bsearch_cb_comp_hd4map_pgm, (void *)&pinval, &idx);
   if (ret >= 0) {
     copy_address = (hd44780_charmap_t *)(g_hd44780_charmap_device + idx);

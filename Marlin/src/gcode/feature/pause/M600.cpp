@@ -98,7 +98,7 @@ void GcodeSuite::M600() {
 
   #if ENABLED(HOME_BEFORE_FILAMENT_CHANGE)
     // Don't allow filament change without homing first
-    if (axis_unhomed_error()) gcode.home_all_axes();
+    if (axis_unhomed_error()) home_all_axes();
   #endif
 
   #if EXTRUDERS > 1
@@ -109,7 +109,7 @@ void GcodeSuite::M600() {
       #if ENABLED(DUAL_X_CARRIAGE)
         && dual_x_carriage_mode != DXC_DUPLICATION_MODE && dual_x_carriage_mode != DXC_MIRRORED_MODE
       #endif
-    ) tool_change(target_extruder, 0, false);
+    ) tool_change(target_extruder, false);
   #endif
 
   // Initial retract before move to filament change position
@@ -170,7 +170,7 @@ void GcodeSuite::M600() {
   #if EXTRUDERS > 1
     // Restore toolhead if it was changed
     if (active_extruder_before_filament_change != active_extruder)
-      tool_change(active_extruder_before_filament_change, 0, false);
+      tool_change(active_extruder_before_filament_change, false);
   #endif
 
   #if ENABLED(MIXING_EXTRUDER)

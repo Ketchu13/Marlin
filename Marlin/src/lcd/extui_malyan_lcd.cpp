@@ -21,7 +21,7 @@
  */
 
 /**
- * malyanlcd.cpp
+ * extui_malyan_lcd.cpp
  *
  * LCD implementation for Malyan's LCD, a separate ESP8266 MCU running
  * on Serial1 for the M200 board. This module outputs a pseudo-gcode
@@ -190,8 +190,8 @@ void process_lcd_j_command(const char* command) {
     case 'E':
       // enable or disable steppers
       // switch to relative
-      enqueue_and_echo_commands_now_P(PSTR("G91"));
-      enqueue_and_echo_commands_now_P(steppers_enabled ? PSTR("M18") : PSTR("M17"));
+      queue.enqueue_now_P(PSTR("G91"));
+      queue.enqueue_now_P(steppers_enabled ? PSTR("M18") : PSTR("M17"));
       steppers_enabled = !steppers_enabled;
       break;
     case 'A':
@@ -204,7 +204,7 @@ void process_lcd_j_command(const char* command) {
       // The M200 class UI seems to send movement in .1mm values.
       char cmd[20];
       sprintf_P(cmd, PSTR("G1 %c%03.1f"), axis, atof(command + 1) / 10.0);
-      enqueue_and_echo_command_now(cmd);
+      queue.enqueue_one_now(cmd);
     } break;
     default:
       SERIAL_ECHOLNPAIR("UNKNOWN J COMMAND", command);
@@ -247,7 +247,7 @@ void process_lcd_p_command(const char* command) {
             true
           #endif
         );
-        clear_command_queue();
+        queue.clear();
         quickstop_stepper();
         print_job_timer.stop();
         thermalManager.disable_all_heaters();
@@ -258,7 +258,7 @@ void process_lcd_p_command(const char* command) {
       break;
     case 'H':
       // Home all axis
-      enqueue_and_echo_commands_now_P(PSTR("G28"));
+      queue.enqueue_now_P(PSTR("G28"));
       break;
     default: {
       #if ENABLED(SDSUPPORT)
@@ -321,7 +321,7 @@ void process_lcd_s_command(const char* command) {
 
     case 'H':
       // Home all axis
-      enqueue_and_echo_command("G28");
+      queue.inject_P(PSTR("G28"));
       break;
 
     case 'L': {
@@ -474,52 +474,28 @@ namespace ExtUI {
     #endif
   }
 
-  void onPrinterKilled(PGM_P const msg) {}
-  void onMediaInserted() {};
-  void onMediaError() {};
-  void onMediaRemoved() {};
-  void onPlayTone(const uint16_t frequency, const uint16_t duration) {}
-  void onPrintTimerStarted() {}
-  void onPrintTimerPaused() {}
-  void onPrintTimerStopped() {}
-  void onFilamentRunout() {}
-  void onUserConfirmRequired(const char * const msg) {}
   void onStatusChanged(const char * const msg) {
     write_to_lcd_P(PSTR("{E:"));
     write_to_lcd(msg);
     write_to_lcd_P("}");
   }
+
+  // Not needed for Malyan LCD
+  void onPrinterKilled(PGM_P const msg) { UNUSED(msg); }
+  void onMediaInserted() {};
+  void onMediaError() {};
+  void onMediaRemoved() {};
+  void onPlayTone(const uint16_t frequency, const uint16_t duration) { UNUSED(frequency); UNUSED(duration); }
+  void onPrintTimerStarted() {}
+  void onPrintTimerPaused() {}
+  void onPrintTimerStopped() {}
+  void onFilamentRunout() {}
+  void onUserConfirmRequired(const char * const msg) { UNUSED(msg); }
   void onFactoryReset() {}
-
-  void onStoreSettings(char *buff) {
-    // This is called when saving to EEPROM (i.e. M500). If the ExtUI needs
-    // permanent data to be stored, it can write up to eeprom_data_size bytes
-    // into buff.
-
-    // Example:
-    //  static_assert(sizeof(myDataStruct) <= ExtUI::eeprom_data_size);
-    //  memcpy(buff, &myDataStruct, sizeof(myDataStruct));
-  }
-
-  void onLoadSettings(const char *buff) {
-    // This is called while loading settings from EEPROM. If the ExtUI
-    // needs to retrieve data, it should copy up to eeprom_data_size bytes
-    // from buff
-
-    // Example:
-    //  static_assert(sizeof(myDataStruct) <= ExtUI::eeprom_data_size);
-    //  memcpy(&myDataStruct, buff, sizeof(myDataStruct));
-  }
-
-  void onConfigurationStoreWritten(bool success) {
-    // This is called after the entire EEPROM has been written,
-    // whether successful or not.
-  }
-
-  void onConfigurationStoreRead(bool success) {
-    // This is called after the entire EEPROM has been read,
-    // whether successful or not.
-  }
+  void onStoreSettings(char *buff) { UNUSED(buff); }
+  void onLoadSettings(const char *buff) { UNUSED(buff); }
+  void onConfigurationStoreWritten(bool success) { UNUSED(success); }
+  void onConfigurationStoreRead(bool success) { UNUSED(success); }
 }
 
 #endif // MALYAN_LCD
