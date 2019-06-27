@@ -108,6 +108,8 @@ typedef int8_t pin_t;
 // Public functions
 // --------------------------------------------------------------------------
 
+void HAL_init(void);
+
 //void cli(void);
 
 //void _delay_ms(const int delay);
