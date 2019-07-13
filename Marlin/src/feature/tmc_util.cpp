@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -774,7 +774,7 @@
   void tmc_report_all(bool print_x, const bool print_y, const bool print_z, const bool print_e) {
     #define TMC_REPORT(LABEL, ITEM) do{ SERIAL_ECHOPGM(LABEL);  tmc_debug_loop(ITEM, print_x, print_y, print_z, print_e); }while(0)
     #define DRV_REPORT(LABEL, ITEM) do{ SERIAL_ECHOPGM(LABEL); drv_status_loop(ITEM, print_x, print_y, print_z, print_e); }while(0)
-    TMC_REPORT("\t\t",                 TMC_CODES);
+    TMC_REPORT("\t",                 TMC_CODES);
     #if HAS_DRIVER(TMC2209)
       TMC_REPORT("Address\t",        TMC_UART_ADDR);
     #endif
@@ -788,7 +788,7 @@
       TMC_REPORT("Global scaler",    TMC_GLOBAL_SCALER);
     #endif
     TMC_REPORT("CS actual\t",        TMC_CS_ACTUAL);
-    TMC_REPORT("PWM scale\t",          TMC_PWM_SCALE);
+    TMC_REPORT("PWM scale",          TMC_PWM_SCALE);
     #if HAS_DRIVER(TMC2130) || HAS_DRIVER(TMC2224) || HAS_DRIVER(TMC2660) || HAS_DRIVER(TMC2208) || HAS_DRIVER(TMC2209)
       TMC_REPORT("vsense\t",         TMC_VSENSE);
     #endif
@@ -804,11 +804,11 @@
     #endif
     TMC_REPORT("off time\t",         TMC_TOFF);
     TMC_REPORT("blank time",         TMC_TBL);
-    TMC_REPORT("Hysteresis\n-end\t", TMC_HEND);
+    TMC_REPORT("hysteresis\n-end\t", TMC_HEND);
     TMC_REPORT("-start\t",           TMC_HSTRT);
     TMC_REPORT("Stallguard thrs",    TMC_SGT);
 
-    DRV_REPORT("DRVSTATUS\t",          TMC_DRV_CODES);
+    DRV_REPORT("DRVSTATUS",          TMC_DRV_CODES);
     #if HAS_TMCX1X0
       DRV_REPORT("stallguard\t",     TMC_STALLGUARD);
       DRV_REPORT("sg_result\t",      TMC_SG_RESULT);
@@ -985,7 +985,7 @@
     st.TCOOLTHRS(0xFFFFF);
     return true;
   }
-  void tmc_disable_stallguard(TMC2209Stepper &st, const bool restore_stealth) {
+  void tmc_disable_stallguard(TMC2209Stepper &st, const bool restore_stealth _UNUSED) {
     st.TCOOLTHRS(0);
   }
 

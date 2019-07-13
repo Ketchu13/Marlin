@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,12 +52,6 @@ extern int8_t manual_move_axis;
 #if IS_KINEMATIC
   extern float manual_move_offset;
 #endif
-
-// Refresh the E factor after changing flow
-#if EXTRUDERS
-  void __lcd_refresh_e_factor_0() { planner.refresh_e_factor(0); }
-  
-#endif // EXTRUDERS
 
 //
 // Tell ui.update() to start a move to current_position" after a short delay.
@@ -248,6 +242,7 @@ void _goto_manual_move(const float scale) {
 void menu_move_10mm() { _goto_manual_move(10); }
 void menu_move_1mm()  { _goto_manual_move( 1); }
 void menu_move_01mm() { _goto_manual_move( 0.1f); }
+void menu_move_0025mm() { _goto_manual_move( 0.025f); }
 void menu_move_001mm() { _goto_manual_move( 0.01f); }
 
 void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int8_t eindex=-1) {
@@ -277,6 +272,8 @@ void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int
     MENU_ITEM(submenu, MSG_MOVE_1MM, menu_move_1mm);
     MENU_ITEM(submenu, MSG_MOVE_01MM, menu_move_01mm);
     MENU_ITEM(submenu, MSG_MOVE_001MM, menu_move_001mm);
+    if (axis == Z_AXIS)
+      MENU_ITEM(submenu, MSG_MOVE_0025MM, menu_move_0025mm);
   }
   END_MENU();
 }
