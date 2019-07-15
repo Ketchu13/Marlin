@@ -31,40 +31,79 @@ try:
         #
         import subprocess
         # typical result (string): 'Drives: C:\ D:\ E:\ F:\ G:\ H:\ I:\ J:\ K:\ L:\ M:\ Y:\ Z:\'
-        driveStr = subprocess.check_output("wmic logicaldisk get deviceid, volumename")
+        driveStr = subprocess.check_output("fsutil fsinfo drives")
         # typical result (string): 'C:\ D:\ E:\ F:\ G:\ H:\ I:\ J:\ K:\ L:\ M:\ Y:\ Z:\'
+        driveStr = driveStr.strip().lstrip('Drives: ')
         # typical result (array of stings): ['C:\\', 'D:\\', 'E:\\', 'F:\\',
         # 'G:\\', 'H:\\', 'I:\\', 'J:\\', 'K:\\', 'L:\\', 'M:\\', 'Y:\\', 'Z:\\']
-        import re
-        driveStr =re.sub('[ +]', '', driveStr) #driveStr.strip('\r\r').sub('[\s+]', '', s)
-    
-        drives = driveStr.split('\r\r\n')
-    
+        drives = driveStr.split()
+
         upload_disk = 'Disk not found'
         target_file_found = False
         target_drive_found = False
         for drive in drives:
-            if ':'in drive:
-                final_drive_name = drive.strip().rstrip('\\').split(':')[0] + ':'   # typical result (string): 'C:'
-                if len(final_drive_name) > 1:
-                    volume_info = drive.strip().rstrip('\\').split(':')[1]
-                    
-                    if target_drive in volume_info and target_file_found == False:  # set upload if not found target file yet
-                        target_drive_found = True
-                        upload_disk = final_drive_name
-            #
-            # set upload_port to drive if found
-            #
-    
-            if target_file_found == True or target_drive_found == True:
-                env.Replace(
-                    UPLOAD_FLAGS="-P$UPLOAD_PORT",
-                    UPLOAD_PORT=upload_disk
-                )
-                print ('upload disk: ', upload_disk)
-                break
+            final_drive_name = drive.strip().rstrip('\\')   # typical result (string): 'C:'
+            try:
+                volume_info = subprocess.check_output('cmd /C dir ' + final_drive_name, stderr=subprocess.STDOUT)
+            except Exception as e:
+                continue
             else:
-                detect_error('Autodetect Error')
+                if target_drive in volume_info and target_file_found == False:  # set upload if not found target file yet
+                    target_drive_found = True
+                    upload_disk = final_drive_name
+                if target_filename in volume_info:
+                    if target_file_found == False:
+                        upload_disk = final_drive_name
+                    target_file_found = True
+
+        #
+        # set upload_port to drive if found
+        #
+
+        if target_file_found == True or target_drive_found == True:
+            env.Replace(
+                UPLOAD_PORT=upload_disk
+            )
+            print('upload disk: ', upload_disk)
+        else:
+            print_error('Autodetect Error')
+
+    elif current_OS == 'Linux':
+        #
+        # platformio.ini will accept this for a Linux upload port designation: 'upload_port = /media/media_name/drive'
+        #
+        upload_disk = 'Disk not found'
+        target_file_found = False
+        target_drive_found = False
+        medias = os.listdir('/media')  #
+        for media in medias:
+            drives = os.listdir('/media/' + media)  #
+            if target_drive in drives and target_file_found == False:  # set upload if not found target file yet
+                target_drive_found = True
+                upload_disk = '/media/' + media + '/' + target_drive + '/'
+            for drive in drives:
+                try:
+                    files = os.listdir('/media/' + media + '/' + drive)
+                except:
+                    continue
+                else:
+                    if target_filename in files:
+                        if target_file_found == False:
+                            upload_disk = '/media/' + media + '/' + drive + '/'
+                            target_file_found = True
+
+        #
+        # set upload_port to drive if found
+        #
+
+        if target_file_found == True or target_drive_found == True:
+            env.Replace(
+                UPLOAD_FLAGS="-P$UPLOAD_PORT",
+                UPLOAD_PORT=upload_disk
+            )
+            print('upload disk: ', upload_disk)
+        else:
+            print_error('Autodetect Error')
 
     elif current_OS == 'Darwin':  # MAC
         #
