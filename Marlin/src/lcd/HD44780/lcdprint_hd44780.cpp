@@ -419,7 +419,7 @@ static const hd44780_charmap_t g_hd44780_charmap_device[] PROGMEM = {
     {IV('⎲'), 0x12, 0},
     {IV('⎳'), 0x13, 0},
 
-    {IV('⏱'), 0x07, 0}, // Marlin special: '???????????????????????? ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
+    {IV('⏱'), 0x07, 0}, // Marlin special: '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛🕜🕝🕞🕟🕠🕡🕢🕣🕤🕥🕦🕧 ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
     {IV('┌'), 0xC9, 0},
     {IV('┐'), 0xCA, 0},
     {IV('└'), 0xCB, 0},
@@ -853,15 +853,15 @@ static const hd44780_charmap_t g_hd44780_charmap_common[] PROGMEM = {
   {IV('≡'), '=', 0}, // 2261
   {IV('≤'), '<', '='},// 2264, ≤≥ ⩽⩾
   {IV('≥'), '>', '='}, // 2265
-  {IV('⏱'), 0x07, 0}, // 23F1, Marlin special: '???????????????????????? ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
+  {IV('⏱'), 0x07, 0}, // 23F1, Marlin special: '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛🕜🕝🕞🕟🕠🕡🕢🕣🕤🕥🕦🕧 ⌚⌛⏰⏱⏳⧖⧗'  LCD_STR_CLOCK (0x05)
 
   {IV('゠'), '=', 0}, // 30A0
 
   // ⏰⏱⏲⏳◴◵◶◷
   // ⏻⏼♁♂
   //{IV(''), 0x00, 0}, // Marlin special: ''  LCD_STR_BEDTEMP (0x07)
-  {IV('?'), 0x02, 0}, // D83CDF21 Marlin special: '?'  LCD_STR_THERMOMETER (0x08)
-  {IV('?'), 0x05, 0}, // D83DDCC2 Marlin special: '??'  LCD_STR_FOLDER (0x02)
+  {IV('🌡'), 0x02, 0}, // D83CDF21 Marlin special: '🌡'  LCD_STR_THERMOMETER (0x08)
+  {IV('📂'), 0x05, 0}, // D83DDCC2 Marlin special: '📁📂'  LCD_STR_FOLDER (0x02)
   //{IV(''), 0x06, 0}, // Marlin special: ''  LCD_STR_FEEDRATE (0x06)
 };
 

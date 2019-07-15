@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,6 +100,7 @@
 
 #define SET_INPUT(IO)         _SET_INPUT(IO)
 #define SET_INPUT_PULLUP(IO)  do{ _SET_INPUT(IO); _WRITE(IO, HIGH); }while(0)
+#define SET_INPUT_PULLDOWN(IO)  do{ _SET_INPUT(IO); _WRITE(IO, LOW); }while(0)
 #define SET_OUTPUT(IO)        _SET_OUTPUT(IO)
 
 #define SET_PWM(IO)           SET_OUTPUT(IO)
@@ -287,11 +288,11 @@ enum ClockSource2 : char {
 
 #if ANY_PIN(FAN, FAN1, FAN2)
   #if PIN_EXISTS(FAN2)
-    #define PWM_CHK_FAN_A(P) (P == FAN_PIN || P == FAN1_PIN || P == FAN2_PIN)
+    #define PWM_CHK_FAN_A(P) (P == FAN0_PIN || P == FAN1_PIN || P == FAN2_PIN)
   #elif PIN_EXISTS(FAN1)
-    #define PWM_CHK_FAN_A(P) (P == FAN_PIN || P == FAN1_PIN)
+    #define PWM_CHK_FAN_A(P) (P == FAN0_PIN || P == FAN1_PIN)
   #else
-    #define PWM_CHK_FAN_A(P) (P == FAN_PIN)
+    #define PWM_CHK_FAN_A(P) (P == FAN0_PIN)
   #endif
 #else
   #define PWM_CHK_FAN_A(P) false
