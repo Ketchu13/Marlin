@@ -53,7 +53,7 @@ extern int8_t manual_move_axis;
   extern float manual_move_offset;
 #endif
 
-// Refresh the E factor after changing flow
+/*/ Refresh the E factor after changing flow
 #if EXTRUDERS
   void __lcd_refresh_e_factor_0() { planner.refresh_e_factor(0); }
   #if EXTRUDERS > 1
@@ -72,7 +72,7 @@ extern int8_t manual_move_axis;
       #endif // EXTRUDERS > 3
     #endif // EXTRUDERS > 2
   #endif // EXTRUDERS > 1
-#endif // EXTRUDERS
+#endif // EXTRUDERS*/
 
 //
 // Tell ui.update() to start a move to current_position" after a short delay.
@@ -511,7 +511,7 @@ void menu_motion() {
   MENU_ITEM(gcode, MSG_DISABLE_STEPPERS, PSTR("M84"));
 //
 
-  // Flow:
+  /*/ Flow:
   // Flow [1-5]:
   //
   
@@ -534,7 +534,7 @@ void menu_motion() {
         #endif // EXTRUDERS > 4
       #endif // EXTRUDERS > 3
     #endif // EXTRUDERS > 2
-  #endif // EXTRUDERS
+  #endif // EXTRUDERS*/
 
   //
   // Babystep X:

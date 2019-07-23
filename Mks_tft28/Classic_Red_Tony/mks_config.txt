@@ -82,7 +82,7 @@ It will auto heat up if the current temp doesn't reach the target.
 ############  Leveling Function  ########################################
 
 #leveling mode(manual:0; auto:1; conceal leveling button:2)
->cfg_leveling_mode:1
+>cfg_leveling_mode:2
 
 #the command of auto leveling (G29 is available for Marlin.While G32 is for  Repetier and Smoothieware)
 >cfg_auto_leveling_cmd:G28;G29;
@@ -164,8 +164,8 @@ It will auto heat up if the current temp doesn't reach the target.
 >morefunc_cnt:1
 
 #command setting on button1~6
->morefunc1_cmd:G29;
->morefunc2_cmd:G28;
+>morefunc1_cmd:G91; G1 Z0.04; G92 Z0; G90; M500;
+>morefunc2_cmd:G91; G1 Z-0.04; G92 Z0; G90; M500;
 >morefunc3_cmd:G28;
 >morefunc4_cmd:G28;
 >morefunc5_cmd:G28;
