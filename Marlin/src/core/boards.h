@@ -49,6 +49,7 @@
 #define BOARD_RAMPS_PLUS_EEF          1033  // RAMPS Plus 3DYMY (Power outputs: Hotend0, Hotend1, Fan)
 #define BOARD_RAMPS_PLUS_SF           1034  // RAMPS Plus 3DYMY (Power outputs: Spindle, Controller Fan)
 
+#define BOARD_RAMPS_S3DP              1035    // RAMPS 1.4 (Power outputs: Hotend0, Hotend1, Bed)
 //
 // RAMPS Derivatives - ATmega1280, ATmega2560
 //
@@ -229,6 +230,7 @@
 #define BOARD_BTT_SKR_V1_1            2012  // BigTreeTech SKR v1.1 (Power outputs: Hotend0, Hotend1, Fan, Bed)
 #define BOARD_BTT_SKR_V1_3            2013  // BigTreeTech SKR v1.3 (Power outputs: Hotend0, Hotend1, Fan, Bed)
 #define BOARD_BTT_SKR_V1_4            2014  // BigTreeTech SKR v1.4 (Power outputs: Hotend0, Hotend1, Fan, Bed)
+#define BOARD_RAMPS_S3DP_24           2015  // Re-ARM with RAMPS 1.6+ (Power outputs: Hotend0, Hotend1, Fan)
 
 //
 // LPC1769 ARM Cortex M3

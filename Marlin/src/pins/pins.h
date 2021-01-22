@@ -77,6 +77,8 @@
   #include "ramps/pins_RAMPS.h"                 // ATmega1280, ATmega2560                 env:mega1280 env:mega2560
 #elif MB(RAMPS_PLUS_EFB, RAMPS_PLUS_EEB, RAMPS_PLUS_EFF, RAMPS_PLUS_EEF, RAMPS_PLUS_SF)
   #include "ramps/pins_RAMPS_PLUS.h"            // ATmega1280, ATmega2560                 env:mega1280 env:mega2560
+#elif MB(RAMPS_S3DP)
+  #include "ramps/pins_RAMPS_S3DP.h"            // ATmega1280, ATmega2560                     env:megaatmega1280 env:megaatmega2560
 
 //
 // RAMPS Derivatives - ATmega1280, ATmega2560
@@ -354,7 +356,9 @@
 //
 
 #elif MB(RAMPS_14_RE_ARM_EFB, RAMPS_14_RE_ARM_EEB, RAMPS_14_RE_ARM_EFF, RAMPS_14_RE_ARM_EEF, RAMPS_14_RE_ARM_SF)
-  #include "lpc1768/pins_RAMPS_RE_ARM.h"        // LPC1768                                env:LPC1768
+  #include "lpc1768/pins_RAMPS_RE_ARM.h"        // LPC1768
+#elif MB(RAMPS_S3DP_24)
+  #include "lpc1768/pins_RAMPS_S3DP_24.h" // LPC1768                                env:LPC1768
 #elif MB(MKS_SBASE)
   #include "lpc1768/pins_MKS_SBASE.h"           // LPC1768                                env:LPC1768
 #elif MB(MKS_SGEN_L)
