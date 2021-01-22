@@ -64,7 +64,9 @@
 #if HAS_DUAL_MIXING
   #include "../../feature/mixing.h"
 #endif
-
+#if ENABLED(LCD_SHOW_E_TOTAL)
+  #include "../../MarlinCore.h" // for printingIsActive
+#endif
 #define X_LABEL_POS      3
 #define X_VALUE_POS     11
 #define XYZ_SPACING     37
