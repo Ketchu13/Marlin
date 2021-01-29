@@ -1370,8 +1370,12 @@
 =======
     #define MESH_TEST_HOTEND_TEMP  205    // (°C) Default nozzle temperature for the G26 Mesh Validation Tool.
     #define MESH_TEST_BED_TEMP      60    // (°C) Default bed temperature for the G26 Mesh Validation Tool.
+<<<<<<< HEAD
     #define G26_XY_FEEDRATE        100    // (mm/s) Feedrate for XY Moves for the G26 Mesh Validation Tool.
 >>>>>>> 90be1c3fa77b4fd5d504131ad06ce5f3197a5811
+=======
+    #define G26_XY_FEEDRATE         20    // (mm/s) Feedrate for XY Moves for the G26 Mesh Validation Tool.
+>>>>>>> 7c28d6b8691963e323a9190f3985b9f963718a35
     #define G26_RETRACT_MULTIPLIER   1.0  // G26 Q (retraction) used by default between mesh test elements.
   #endif
 
