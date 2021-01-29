@@ -1375,7 +1375,11 @@
 >>>>>>> 90be1c3fa77b4fd5d504131ad06ce5f3197a5811
 =======
     #define G26_XY_FEEDRATE         20    // (mm/s) Feedrate for XY Moves for the G26 Mesh Validation Tool.
+<<<<<<< HEAD
 >>>>>>> 7c28d6b8691963e323a9190f3985b9f963718a35
+=======
+    #define G26_XY_FEEDRATE_TRAVEL 100    // (mm/s) Feedrate for XY Moves without extrusion for the G26 Mesh Validation Tool
+>>>>>>> 7f4c5b86dbfca29622474ea8572c8e3df80089b9
     #define G26_RETRACT_MULTIPLIER   1.0  // G26 Q (retraction) used by default between mesh test elements.
   #endif
 
