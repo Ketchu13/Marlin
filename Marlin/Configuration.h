@@ -1362,6 +1362,7 @@
   //#define G26_MESH_VALIDATION
   #if ENABLED(G26_MESH_VALIDATION)
     #define MESH_TEST_NOZZLE_SIZE    0.4  // (mm) Diameter of primary nozzle.
+<<<<<<< HEAD
     #define MESH_TEST_LAYER_HEIGHT   0.2  // (mm) Default layer height for the G26 Mesh Validation Tool.
 <<<<<<< HEAD
     #define MESH_TEST_HOTEND_TEMP  210.0    // (°C) Default nozzle temperature for the G26 Mesh Validation Tool.
@@ -1380,6 +1381,13 @@
 =======
     #define G26_XY_FEEDRATE_TRAVEL 100    // (mm/s) Feedrate for XY Moves without extrusion for the G26 Mesh Validation Tool
 >>>>>>> 7f4c5b86dbfca29622474ea8572c8e3df80089b9
+=======
+    #define MESH_TEST_LAYER_HEIGHT   0.2  // (mm) Default layer height for G26.
+    #define MESH_TEST_HOTEND_TEMP  205    // (°C) Default nozzle temperature for G26.
+    #define MESH_TEST_BED_TEMP      60    // (°C) Default bed temperature for G26.
+    #define G26_XY_FEEDRATE         20    // (mm/s) Feedrate for G26 XY moves.
+    #define G26_XY_FEEDRATE_TRAVEL 100    // (mm/s) Feedrate for G26 XY travel moves.
+>>>>>>> 8c0cb6cce8b02f0f5f972ff8ebbd7c6a8e39cd44
     #define G26_RETRACT_MULTIPLIER   1.0  // G26 Q (retraction) used by default between mesh test elements.
   #endif
 
