@@ -42,10 +42,11 @@ try:
 		drives = []
 		bitmask = windll.kernel32.GetLogicalDrives()
 		for letter in string.ascii_uppercase:
+			
 			if bitmask & 1:
 				drives.append(letter)
 			bitmask >>= 1
-
+		print(drives)
 		for drive in drives:
 			final_drive_name = drive + ':\\'
 			# print ('disc check: {}'.format(final_drive_name))
