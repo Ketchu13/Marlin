@@ -1779,7 +1779,14 @@
  *
  * View the current statistics with M78.
  */
+<<<<<<< HEAD
 #define PRINTCOUNTER
+=======
+//#define PRINTCOUNTER
+#if ENABLED(PRINTCOUNTER)
+  #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print
+#endif
+>>>>>>> b95f5c5bea26ce50c73df3f30241365f220a623c
 
 /**
  * Password
