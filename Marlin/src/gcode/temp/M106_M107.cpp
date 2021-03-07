@@ -56,40 +56,56 @@
  */
 void GcodeSuite::M106() {
   const uint8_t pfan = parser.byteval('P', _ALT_P);
+  bool report = true;
 
-  if (pfan < _CNT_P) {
+  if (!parser.seenval('V')) {
 
-    #if ENABLED(EXTRA_FAN_SPEED)
-      const uint16_t t = parser.intval('T');
-      if (t > 0) return thermalManager.set_temp_fan_speed(pfan, t);
-    #endif
+   if (pfan < _CNT_P) {
+     #if ENABLED(EXTRA_FAN_SPEED)
+       const uint16_t t = parser.intval('T');
+       if (t > 0) return thermalManager.set_temp_fan_speed(pfan, t);
+     #endif
+     const uint16_t dspeed = parser.seen('A') ? thermalManager.fan_speed[active_extruder] : 255;
+     uint16_t speed = dspeed;
 
-    const uint16_t dspeed = parser.seen('A') ? thermalManager.fan_speed[active_extruder] : 255;
+     // Accept 'I' if temperature presets are defined
+     #if PREHEAT_COUNT
+       const bool got_preset = parser.seenval('I');
+       if (got_preset) speed = ui.material_preset[_MIN(parser.value_byte(), PREHEAT_COUNT - 1)].fan_speed;
+     #else
+       constexpr bool got_preset = false;
+     #endif
 
-    uint16_t speed = dspeed;
+     if (!got_preset && parser.seenval('S'))
+       speed = parser.value_ushort();
 
-    // Accept 'I' if temperature presets are defined
-    #if PREHEAT_COUNT
-      const bool got_preset = parser.seenval('I');
-      if (got_preset) speed = ui.material_preset[_MIN(parser.value_byte(), PREHEAT_COUNT - 1)].fan_speed;
-    #else
-      constexpr bool got_preset = false;
-    #endif
-
-    if (!got_preset && parser.seenval('S'))
-      speed = parser.value_ushort();
-
-    // Set speed, with constraint
-    thermalManager.set_fan_speed(pfan, speed);
+     // Set speed, with constraint
+     thermalManager.set_fan_speed(pfan, speed);
+   }
+  }
+  
+  if (report) {
+    SERIAL_ECHOPGM("Fan(s) Speed: ");
+    for (uint8_t i = 0; i < FAN_COUNT; i++) {
+      SERIAL_ECHOPAIR(" Fan", i);
+      SERIAL_ECHOLNPAIR("=", thermalManager.scaledFanSpeed(i));
+    }
   }
 }
-
 /**
  * M107: Fan Off
  */
 void GcodeSuite::M107() {
   const uint8_t p = parser.byteval('P', _ALT_P);
   thermalManager.set_fan_speed(p, 0);
+  bool report = true;
+  if (report) {
+    SERIAL_ECHOPGM("Fan(s) Speed: ");
+    for (uint8_t i = 0; i < FAN_COUNT; i++) {
+      SERIAL_ECHOPAIR(" Fan", i);
+      SERIAL_ECHOLNPAIR("=", thermalManager.scaledFanSpeed(i));
+    }
+  }
 }
 
 #endif // HAS_FAN
